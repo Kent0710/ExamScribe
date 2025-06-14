@@ -11,6 +11,7 @@ import { ExamsTab } from "./exams-tab";
 import { MetricsTab } from "./metrics-tab";
 import getSubject from "@/actions/get-subject";
 import { Suspense } from "react";
+import MaterialsTabServer from "./materials-tab-server";
 
 const SubjectPage = async ({
     params,
@@ -74,7 +75,11 @@ const SubjectPage = async ({
                     </Suspense>
                 </TabsContent>
                 <TabsContent value="materials">
-                    <MaterialsTab />
+                    <Suspense fallback={<>Loading</>}>
+                        <MaterialsTabServer
+                            subjectId={awaitedParams.subjectId}
+                        />
+                    </Suspense>
                 </TabsContent>
                 <TabsContent value="exams">
                     <ExamsTab />
