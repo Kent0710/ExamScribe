@@ -82,7 +82,9 @@ const SubjectPage = async ({
                     </Suspense>
                 </TabsContent>
                 <TabsContent value="exams">
-                    <ExamsTab />
+                    <Suspense fallback={<>Loading</>}>
+                        <ExamsTab subjectId={awaitedParams.subjectId} />
+                    </Suspense>
                 </TabsContent>
                 <TabsContent value="metrics">
                     <MetricsTab />

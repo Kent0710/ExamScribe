@@ -16,12 +16,13 @@ const buttonVariants = cva(
         outline:
           "border bg-background text-muted-foreground shadow-xs hover:bg-accent dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
         secondary:
-          "bg-secondary text-secondary-foreground/70 shadow-xs hover:bg-secondary/80",
+          "bg-secondary border border-secondary text-secondary-foreground/70 shadow-xs hover:bg-secondary/80",
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
         glow: 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full font-semibold transition-all duration-300 transform hover:scale-105 animate-pulse-glow',
-        accent : 'bg-gradient-to-r from-amber-500 to-pink-500 text-white hover:opacity-70 cursor-pointer transition duration-200'
+        accent : 'bg-gradient-to-r from-amber-500 to-pink-500 text-white hover:opacity-70 cursor-pointer transition duration-200',
+        green : 'border border-green-500 text-green-500 hover:opacity-70 cursor-pointer transition duration-200',
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

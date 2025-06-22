@@ -1,9 +1,8 @@
 import { BarChart3, Users } from "lucide-react";
 import { Card, CardContent, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
 import getSubjects from "@/actions/get-subjects";
 import { Badge } from "../ui/badge";
-import Link from "next/link";
+import SubjectCardButton from "./subject-card-button";
 
 interface SubjectCardProps {
     subjectId : string;
@@ -38,12 +37,7 @@ const SubjectCard: React.FC<SubjectCardProps> = ({
                         {numberOfExamCreated} exams
                     </div>
                 </section>
-                <Link href={`/subject/${subjectId}`}>
-                    <Button variant={"outline"} className="w-full">
-                        {" "}
-                        Open subject{" "}
-                    </Button>
-                </Link>
+                <SubjectCardButton subjectId={subjectId} />
             </CardContent>
         </Card>
     );

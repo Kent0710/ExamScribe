@@ -7,6 +7,7 @@ import {
     Settings,
     Home,
     Brain,
+    BookA,
 } from "lucide-react";
 import {
     Sidebar,
@@ -19,38 +20,10 @@ import {
     SidebarMenuItem,
     SidebarHeader,
     SidebarFooter,
-    SidebarTrigger,
-    useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-
-const menuItems = [
-    {
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: Home,
-    },
-    {
-        title: "All Sections",
-        url: "/dashboard",
-        icon: BookOpen,
-    },
-    {
-        title: "Students",
-        url: "#",
-        icon: Users,
-    },
-    {
-        title: "Analytics",
-        url: "#",
-        icon: BarChart3,
-    },
-    {
-        title: "AI Tools",
-        url: "#",
-        icon: Brain,
-    },
-];
+import { useMemo } from "react";
+import { usePathname } from "next/navigation";
 
 const bottomItems = [
     {
@@ -60,11 +33,46 @@ const bottomItems = [
     },
 ];
 
-export function AppSidebar() {
+const AppSidebar = () => {
+    const pathname = usePathname();
+
+    const menuItems = useMemo(
+        () => [
+            {
+                title: "Dashboard",
+                url: "/dashboard",
+                icon: BookOpen,
+                active: pathname.includes("dashboard"),
+            },
+            {
+                title: "Subjects",
+                url: "/subject",
+                icon: BookA,
+                active: pathname.includes("subject"),
+            },
+            {
+                title: "Students",
+                url: "#",
+                icon: Users,
+            },
+            {
+                title: "Analytics",
+                url: "#",
+                icon: BarChart3,
+            },
+            {
+                title: "AI Tools",
+                url: "#",
+                icon: Brain,
+            },
+        ],
+        [pathname]
+    );
+
     return (
         <Sidebar className="border-none">
             <SidebarHeader className="border-b px-6 py-4 ">
-                <Link href={"/"}>
+                <Link href={"/"} prefetch={false}>
                     <div className="flex items-center space-x-2 flex-wrap">
                         <Brain className="h-6 w-6 text-white" />
                         <div className="font-bold text-lg">ExamScribe</div>
@@ -74,16 +82,24 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel className="text-white">Navigation</SidebarGroupLabel>
+                    <SidebarGroupLabel className="text-white">
+                        Navigation
+                    </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {menuItems.map((item) => (
                                 <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <a href={item.url} className="font-semibold">
+                                    <SidebarMenuButton
+                                        asChild
+                                        className={`font-semibold   hover:bg-white/10 hover:text-white active:bg-white/10 active:text-white ${
+                                            item.active &&
+                                            "bg-white text-blue-500 hover:bg-white hover:text-blue-500"
+                                        }`}
+                                    >
+                                        <Link href={item.url} prefetch={false}>
                                             <item.icon />
                                             <span>{item.title}</span>
-                                        </a>
+                                        </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
@@ -108,4 +124,6 @@ export function AppSidebar() {
             </SidebarFooter>
         </Sidebar>
     );
-}
+};
+
+export default AppSidebar;
