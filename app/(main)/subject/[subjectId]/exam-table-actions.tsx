@@ -11,11 +11,13 @@ import { toast } from "sonner";
 interface ExamTableActionsProps {
     examId: string;
     examStatus: string;
+    examTitle : string;
 }
 
 const ExamTableActions: React.FC<ExamTableActionsProps> = ({
     examId,
     examStatus,
+    examTitle
 }) => {
     const router = useRouter();
     const [isActionClicked, setIsActionClicked] = useState(false);
@@ -34,12 +36,12 @@ const ExamTableActions: React.FC<ExamTableActionsProps> = ({
         setIsActionClicked(true);
 
         switch (action) {
-            case "preview":
-                toast.info("Preview action clicked."); // Implement logic as needed
+            case "view":
+                router.push(`/exam/take/${examId}?examTitle=${examTitle}`);
                 break;
 
             case "edit":
-                router.push(`/exam/${examId}`);
+                router.push(`/exam/edit/${examId}`);
                 break;
 
             case "open":
@@ -91,8 +93,8 @@ const ExamTableActions: React.FC<ExamTableActionsProps> = ({
             <Button
                 variant="ghost"
                 size="sm"
-                title="Preview"
-                data-action="preview"
+                title="View"
+                data-action="view"
             >
                 <Eye className="w-4 h-4" />
             </Button>

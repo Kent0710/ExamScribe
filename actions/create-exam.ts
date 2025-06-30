@@ -27,5 +27,5 @@ export default async function createExam(subjectId : string, values : z.infer<ty
         }
     };
 
-    redirect(`/exam/${createdExam.id}`)
+    redirect(`/exam/edit/${createdExam.id}`)
 }

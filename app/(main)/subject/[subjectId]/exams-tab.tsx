@@ -125,6 +125,7 @@ export const ExamsTab: React.FC<ExamsTabProps> = async ({ subjectId }) => {
                                 <TableCell>{exam.dueDate}</TableCell>
                                 <TableCell>
                                     <ExamTableActions
+                                    examTitle={exam.title}
                                         examId={exam.id}
                                         examStatus={exam.status}
                                     />

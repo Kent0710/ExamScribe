@@ -68,6 +68,7 @@ const SubjectPage = async ({
                     <TabsTrigger value="materials">Materials</TabsTrigger>
                     <TabsTrigger value="exams">Exams</TabsTrigger>
                     <TabsTrigger value="metrics">Metrics</TabsTrigger>
+                    <TabsTrigger value="settings">Settings</TabsTrigger>
                 </TabsList>
                 <TabsContent value="students">
                     <Suspense fallback={<>Loading</>}>
@@ -88,6 +89,9 @@ const SubjectPage = async ({
                 </TabsContent>
                 <TabsContent value="metrics">
                     <MetricsTab />
+                </TabsContent>
+                 <TabsContent value="settings">
+                    <> Settings here </>
                 </TabsContent>
             </Tabs>
         </div>

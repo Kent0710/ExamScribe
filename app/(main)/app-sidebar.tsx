@@ -8,6 +8,11 @@ import {
     Home,
     Brain,
     BookA,
+    Mail,
+    Pen,
+    BookText,
+    Dumbbell,
+    NotebookText,
 } from "lucide-react";
 import {
     Sidebar,
@@ -51,14 +56,40 @@ const AppSidebar = () => {
                 active: pathname.includes("subject"),
             },
             {
+                title: "Exams",
+                url: "#",
+                icon: Pen,
+                active: pathname.includes("exam"),
+            },
+            {
+                title: "Materials",
+                url: "#",
+                icon: BookText,
+            },
+            {
                 title: "Students",
                 url: "#",
                 icon: Users,
             },
             {
+                title: "Practice",
+                url: "#",
+                icon: Dumbbell,
+            },
+            {
+                title: "Notes",
+                url: "#",
+                icon: NotebookText,
+            },
+            {
                 title: "Analytics",
                 url: "#",
                 icon: BarChart3,
+            },
+            {
+                title: "Inbox",
+                url: "#",
+                icon: Mail,
             },
             {
                 title: "AI Tools",

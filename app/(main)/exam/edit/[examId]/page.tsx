@@ -1,9 +1,14 @@
 import getExam from "@/actions/get-exam";
 import PageTitleHeader from "@/components/reusables/page-title-header";
 import { Button } from "@/components/ui/button";
-import { Settings2 } from "lucide-react";
-import QuestionsTab from "./questions-tab";
+import { Loader2, Settings2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Suspense } from "react";
+import QuestionsTabServer from "./tabs/questions/questions-tab-server";
+import PreviewTab from "./tabs/preview/preview-tab";
+import getSectionsQuestionsOptions from "@/actions/get-sections-questions-options";
+import QuestionsTab from "./tabs/questions/questions-tab";
+import SettingsTab from "./tabs/settings/settings-tab";
 
 const ExamPage = async ({
     params,
@@ -17,13 +22,19 @@ const ExamPage = async ({
         return <> Something went wrong when getting the exam: {error} </>;
     }
 
+    const { initialSections } = await getSectionsQuestionsOptions(
+        awaitedParams.examId
+    );
+    const sectionCount = initialSections[initialSections.length - 1]?.order
+        ? initialSections[initialSections.length - 1].order + 1
+        : 1;
+
     return (
         <div className="space-y-4">
             {/* <pre className="w-[25rem] whitespace-pre-wrap">
                 {" "}
                 {JSON.stringify(exam)}{" "}
             </pre> */}
-
             <PageTitleHeader title={exam.title}>
                 <div className="space-x-2">
                     <Button>
@@ -41,16 +52,25 @@ const ExamPage = async ({
                     <TabsTrigger value="settings">Settings</TabsTrigger>
                 </TabsList>
                 <TabsContent value="questions" className="mx-[5rem]">
-                    <QuestionsTab examId={awaitedParams.examId} />
+                    <QuestionsTab
+                        examId={awaitedParams.examId}
+                        initialSections={initialSections || []}
+                        sectionCount={sectionCount}
+                    />
                 </TabsContent>
                 <TabsContent value="responses" className="mx-[5rem]">
                     Change your password here.
                 </TabsContent>
                 <TabsContent value="preview" className="mx-[5rem]">
-                    Change your password here.
+                    <PreviewTab
+                        examId={awaitedParams.examId}
+                        initialSections={initialSections || []}
+                    />
                 </TabsContent>
                 <TabsContent value="settings" className="mx-[5rem]">
-                    Change your password here.
+                    <SettingsTab 
+                        examId={awaitedParams.examId}
+                    />
                 </TabsContent>
             </Tabs>
         </div>
@@ -58,3 +78,19 @@ const ExamPage = async ({
 };
 
 export default ExamPage;
+
+interface SuspenseFallbackTabLoaderProps {
+    text: string;
+}
+const SuspenseFallbackTabLoader: React.FC<SuspenseFallbackTabLoaderProps> = ({
+    text,
+}) => {
+    return (
+        <div className="flex items-center justify-center w-full h-[20rem]">
+            <div className="flex items-center gap-2 font-semibold text-neutral-500">
+                {" "}
+                <Loader2 className="animate-spin" /> {text}{" "}
+            </div>
+        </div>
+    );
+};

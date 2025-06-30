@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
     Select,
@@ -14,6 +13,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useIsCreatedSectionsHasParagraph } from "@/stores/edit-exam-settings-tab-stores";
 import { Check, Copy, Trash, X } from "lucide-react";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
@@ -43,6 +43,7 @@ interface QuestionCardEditProps {
     sectionId: string;
     sections: Section[];
     setSections: Dispatch<SetStateAction<Section[]>>;
+    paragraphTypeQuestionsCount : number;
 }
 
 const QuestionCardEdit: React.FC<QuestionCardEditProps> = ({
@@ -50,7 +51,10 @@ const QuestionCardEdit: React.FC<QuestionCardEditProps> = ({
     sectionId,
     sections,
     setSections,
+    paragraphTypeQuestionsCount,
 }) => {
+    const { isCreatedSectionsHasParagraph, setIsCreatedSectionsHasParagraph } =
+        useIsCreatedSectionsHasParagraph();
     const [questionType, setQuestionType] = useState(question.type);
 
     return (
@@ -83,9 +87,22 @@ const QuestionCardEdit: React.FC<QuestionCardEditProps> = ({
                             );
                         }}
                     />
+
                     <Select
                         value={questionType}
                         onValueChange={(value) => {
+                            if (value === "paragraph") {
+                                setIsCreatedSectionsHasParagraph(
+                                    true,
+                                    question.id
+                                );
+                            } else {
+                                // check question id
+                                // if this is the question that got a firstly true
+                                // then it was changed to false
+                                // meaning i dont have any questions with paragraph type anymore
+                            }
+
                             setQuestionType(value);
                             setSections((prevSections) =>
                                 prevSections.map((section) =>

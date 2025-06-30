@@ -1,23 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QuestionCardEdit from "./question-card-edit";
 import { Button } from "@/components/ui/button";
-import { Save, Trash } from "lucide-react";
+import { Save, Terminal, Trash } from "lucide-react";
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import saveChangesExam from "@/actions/save-changes.exam";
 
 import { v4 as uuidv4 } from "uuid";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useIsCreatedSectionsHasParagraph } from "@/stores/edit-exam-settings-tab-stores";
 
 interface Question {
     id: string;
@@ -40,12 +35,29 @@ interface Section {
 
 interface QuestionsTabProps {
     examId: string;
+    initialSections: Section[];
+    sectionCount: number;
 }
-const QuestionsTab: React.FC<QuestionsTabProps> = ({ examId }) => {
-    const [sectionCount, setSectionCount] = useState(1);
-    const [createdUUids, setCreatedUUids] = useState<string[]>([]);
 
-    const [sections, setSections] = useState<Section[]>([]);
+const QuestionsTab: React.FC<QuestionsTabProps> = ({
+    examId,
+    initialSections,
+    sectionCount: initialSectionCount,
+}) => {
+    // USE FOR TRACKING THE NUMBER OF SECTIONS
+    const [sectionCount, setSectionCount] = useState(initialSectionCount);
+    // USE FOR TRACKING CHANGES FOR THE SECTIONS
+    const [sections, setSections] = useState<Section[]>(initialSections);
+
+    const [paragraphTypeQuestionsCount,setParagraphTypeQuestionsCount] = useState(0);
+    useEffect(()=> {
+        sections.map((section) => {
+            section.questions.map((question) => {
+                if (question.type === 'paragraph') setParagraphTypeQuestionsCount((prevCount) => prevCount + 1);
+            })
+        })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const addNewSection = () => {
         // CREATE UUIDS WHILE VALIDATING THAT THEY ARE UNIQUE
@@ -59,7 +71,7 @@ const QuestionsTab: React.FC<QuestionsTabProps> = ({ examId }) => {
             {
                 id: newSectionId,
                 title: `Section ${sectionCount}`,
-                order : sectionCount,
+                order: sectionCount,
                 questions: [
                     {
                         id: newSectionQuestionId,
@@ -194,7 +206,7 @@ const QuestionsTab: React.FC<QuestionsTabProps> = ({ examId }) => {
             return;
         }
 
-        const res = await saveChangesExam(examId, sections);
+        const res = await saveChangesExam(examId, sections, initialSections);
 
         if (!res.success) {
             toast.error(res.error, { duration: 1500 });
@@ -214,6 +226,17 @@ const QuestionsTab: React.FC<QuestionsTabProps> = ({ examId }) => {
             >
                 <Save /> Save changes
             </Button>
+
+            {initialSections.length === 0 && (
+                <Alert className="mb-6">
+                    <Terminal />
+                    <AlertTitle>No sections for this exam yet.</AlertTitle>
+                    <AlertDescription>
+                        Add new section below to start creating questions for
+                        this exam.
+                    </AlertDescription>
+                </Alert>
+            )}
 
             {sections.map((section) => (
                 <div
@@ -278,6 +301,7 @@ const QuestionsTab: React.FC<QuestionsTabProps> = ({ examId }) => {
                                 sectionId={section.id}
                                 sections={sections}
                                 setSections={setSections}
+                                paragraphTypeQuestionsCount={paragraphTypeQuestionsCount}
                             />
                         ))}
                     </section>
@@ -297,10 +321,6 @@ const QuestionsTab: React.FC<QuestionsTabProps> = ({ examId }) => {
             >
                 Add new section
             </Button>
-            <pre className="w-[40rem] whitespace-pre-wrap">
-                {" "}
-                {JSON.stringify(sections)}{" "}
-            </pre>
         </div>
     );
 };
