@@ -43,7 +43,6 @@ interface QuestionCardEditProps {
     sectionId: string;
     sections: Section[];
     setSections: Dispatch<SetStateAction<Section[]>>;
-    paragraphTypeQuestionsCount : number;
 }
 
 const QuestionCardEdit: React.FC<QuestionCardEditProps> = ({
@@ -51,7 +50,6 @@ const QuestionCardEdit: React.FC<QuestionCardEditProps> = ({
     sectionId,
     sections,
     setSections,
-    paragraphTypeQuestionsCount,
 }) => {
     const { isCreatedSectionsHasParagraph, setIsCreatedSectionsHasParagraph } =
         useIsCreatedSectionsHasParagraph();
@@ -91,19 +89,23 @@ const QuestionCardEdit: React.FC<QuestionCardEditProps> = ({
                     <Select
                         value={questionType}
                         onValueChange={(value) => {
-                            if (value === "paragraph") {
-                                setIsCreatedSectionsHasParagraph(
-                                    true,
-                                    question.id
-                                );
-                            } else {
-                                // check question id
-                                // if this is the question that got a firstly true
-                                // then it was changed to false
-                                // meaning i dont have any questions with paragraph type anymore
-                            }
+                            setQuestionType(value); // your local state update
 
-                            setQuestionType(value);
+                            if (value === "paragraph") {
+                                setIsCreatedSectionsHasParagraph(true);
+                            } else {
+                                // Simulate the new state: check if *any* paragraph remains
+                                const has = sections.some((section) =>
+                                    section.questions.some(
+                                        (q) =>
+                                            // If it's the current question, check using the *new* value
+                                            (q.id === questionId
+                                                ? value
+                                                : q.type) === "paragraph"
+                                    )
+                                );
+                                setIsCreatedSectionsHasParagraph(has);
+                            }
                             setSections((prevSections) =>
                                 prevSections.map((section) =>
                                     section.id === sectionId

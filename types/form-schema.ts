@@ -33,3 +33,8 @@ export const createManualExamFormSchema = z.object({
     dueTime : z.string().time(),
     examDescription : z.string().optional(),
 });
+
+export const SettingsTabFormSchema = z.object({
+    allowImmediateResultViewing : z.boolean(),
+    allowMultipleResponses : z.boolean(),
+})

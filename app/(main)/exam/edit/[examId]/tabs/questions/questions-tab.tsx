@@ -49,15 +49,16 @@ const QuestionsTab: React.FC<QuestionsTabProps> = ({
     // USE FOR TRACKING CHANGES FOR THE SECTIONS
     const [sections, setSections] = useState<Section[]>(initialSections);
 
-    const [paragraphTypeQuestionsCount,setParagraphTypeQuestionsCount] = useState(0);
-    useEffect(()=> {
-        sections.map((section) => {
-            section.questions.map((question) => {
-                if (question.type === 'paragraph') setParagraphTypeQuestionsCount((prevCount) => prevCount + 1);
-            })
-        })
+    const { setIsCreatedSectionsHasParagraph } =
+        useIsCreatedSectionsHasParagraph();
+
+    useEffect(() => {
+        const has = sections.some((section) =>
+            section.questions.some((q) => q.type === "paragraph")
+        );
+        if (has) setIsCreatedSectionsHasParagraph(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
 
     const addNewSection = () => {
         // CREATE UUIDS WHILE VALIDATING THAT THEY ARE UNIQUE
@@ -301,7 +302,6 @@ const QuestionsTab: React.FC<QuestionsTabProps> = ({
                                 sectionId={section.id}
                                 sections={sections}
                                 setSections={setSections}
-                                paragraphTypeQuestionsCount={paragraphTypeQuestionsCount}
                             />
                         ))}
                     </section>

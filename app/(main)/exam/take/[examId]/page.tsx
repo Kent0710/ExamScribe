@@ -6,6 +6,7 @@ import Link from "next/link";
 import TakeQuestionsClient from "./take-questions-client";
 import PageTitleHeader from "@/components/reusables/page-title-header";
 import getExamResult from "@/actions/get-exam-result";
+import getExamSettings from "@/actions/get-exam-settings";
 
 const TakePage = async ({
     params,
@@ -20,6 +21,7 @@ const TakePage = async ({
     const { success, error, examResult } = await getExamResult(
         awaitedParams.examId
     );
+    const { examSettings } = await getExamSettings(awaitedParams.examId);
     if (success && examResult && error === null) {
         return (
             <div className="h-[90dvh] w-full flex items-center justify-center space-y-4 flex-col">
@@ -30,15 +32,21 @@ const TakePage = async ({
                         {examResult.score}{" "}
                     </p>
                 </div>
-                <div>
+                <div className="flex flex-col items-center">
                     <p className="font-semibold text-2xl">
                         {" "}
                         {awaitedSearchParams.examTitle}{" "}
                     </p>
-                    <p className="text-neutral-500">
-                        {" "}
-                        You already took this exam.{" "}
-                    </p>
+                    {examSettings?.allowMultipleResponses ? (
+                        <div>
+                            <Button variant={'link'}> Take again </Button>
+                        </div>
+                    ) : (
+                        <p className="text-neutral-500">
+                            {" "}
+                            You already took this exam.{" "}
+                        </p>
+                    )}
                 </div>
                 <Button> View detailed result </Button>
             </div>

@@ -9,6 +9,7 @@ import PreviewTab from "./tabs/preview/preview-tab";
 import getSectionsQuestionsOptions from "@/actions/get-sections-questions-options";
 import QuestionsTab from "./tabs/questions/questions-tab";
 import SettingsTab from "./tabs/settings/settings-tab";
+import SettingsTabServer from "./tabs/settings/settings-tab-server";
 
 const ExamPage = async ({
     params,
@@ -68,7 +69,7 @@ const ExamPage = async ({
                     />
                 </TabsContent>
                 <TabsContent value="settings" className="mx-[5rem]">
-                    <SettingsTab 
+                    <SettingsTabServer
                         examId={awaitedParams.examId}
                     />
                 </TabsContent>
